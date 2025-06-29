@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }} ">
+    <title>ToDo</title>
+</head>
+<body>
+    <h1>ToDo</h1>
+    <div class="todo-list">
+        <div class="todo-container">
+            <div class="title">
+                Title 1
+                <select>
+                    <option></option>
+                    <option>Edit</option>
+                    <option>Delete</option>
+                </select>
+            </div>
+            <div class="content">
+                <div class="text">This is a todo.</div>
+                <input type="checkbox" name="status" id="status">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
