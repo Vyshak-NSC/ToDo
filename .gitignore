@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 
+# Migrations - keep folder, ignore cache
+migrations/__pycache__/
+
 # Virtual environments
 venv/
 env/
