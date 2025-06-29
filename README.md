@@ -20,7 +20,7 @@ A simple RESTful ToDo website built with Flask,SQLAlchemy and Marshmallow.
 - Marshmallow 4.0.0
 
 ## Project Structure
-
+```
 TODO
 |-- app/
 |   |-- __init__.py
@@ -44,39 +44,39 @@ TODO
 |-- requirements.txt
 |-- run.py
 |-- README.me
-
+```
 ## Installation
 
-'''bash
+```bash
 git clone https://github.com/Vyshak-NSC/ToDo.git
 cd ToDo
 py -m venv venv
 venv/scripts/activate
 pip install -r requirements.txt
-'''
+```
 
 ## Set up environment
 
-'''bash
+```bash
 FLASK_APP=run.py
 FLASK_ENV=development
 DATABASE_URL=sqlite:///todo.db
 SECRET_KEY=your-secret-key
-'''
+```
 
 ## Initialise database
 
-'''bash
+```bash
 flask db init
 flask db migrate -m "Initiall migration"
 flask db upgrade
-'''
+```
 
 ## Running the Website
 
-'''bash
+```bash
 flask run
-'''
+```
 
 ## API Endpoints
 
