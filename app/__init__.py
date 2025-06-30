@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
 from dotenv import load_dotenv
 from app.extensions import db, migrate, ma
+from flask_cors import CORS
+
 load_dotenv()
 from app.models import *
 
@@ -11,6 +13,7 @@ def create_app():
     db.init_app(app)
     ma.init_app(app)
     migrate.init_app(app, db)
+    CORS(app)
     
     with app.app_context():
         db.create_all()
@@ -24,7 +27,6 @@ def create_app():
     
     app.register_blueprint(main_bp, url_prefix='/')
     app.register_blueprint(api_bp, url_prefix='/api')
+    
     return app
     
-if __name__ == "__main__":
-    create_app.run()

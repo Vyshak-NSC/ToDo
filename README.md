@@ -9,7 +9,7 @@ A simple RESTful ToDo website built with Flask,SQLAlchemy and Marshmallow.
 - List all or selected task
 - Toggle task status
 
-## Tech Stack
+## Dependencies
 
 - Python 3.12.4
 - Flask 3.1.1
@@ -21,47 +21,37 @@ A simple RESTful ToDo website built with Flask,SQLAlchemy and Marshmallow.
 
 ## Project Structure
 ```
-TODO
-|-- app/
-|   |-- __init__.py
-|   |-- api.py
-|   |-- models.py
-|   |-- schemas.py
-|   |-- extensions.py
-|   |-- blueprints/
-|   |   |-- main/
-|   |       |-- __init__.py
-|   |       |-- routes.py
-|   |-- static/
-|   |   |--css/
-|   |   |   |-- styles.css
-|   |   |--js/
-|   |       |-- scripts.js
-|   |-- templates/
-|   |    |-- index.html
-|-- migrations/
-|-- config.py
-|-- requirements.txt
-|-- run.py
-|-- README.me
+TODO/
+├── app/
+│   ├── __init__.py
+│   ├── api.py
+│   ├── models.py
+│   ├── schemas.py
+│   ├── extensions.py
+│   ├── blueprints/
+│   │   └── main/
+│   │       ├── __init__.py
+│   │       └── routes.py
+│   ├── static/
+│   │   ├── css/
+│   │   │   └── styles.css
+│   │   └── js/
+│   │       └── scripts.js
+│   └── templates/
+│       └── index.html
+├── migrations/
+├── config.py
+├── requirements.txt
+├── run.py
+└── README.md
 ```
+
 ## Installation
 
 ```bash
 git clone https://github.com/Vyshak-NSC/ToDo.git
 cd ToDo
-py -m venv venv
-venv/scripts/activate
 pip install -r requirements.txt
-```
-
-## Set up environment
-
-```bash
-FLASK_APP=run.py
-FLASK_ENV=development
-DATABASE_URL=sqlite:///todo.db
-SECRET_KEY=your-secret-key
 ```
 
 ## Initialise database
@@ -74,6 +64,22 @@ flask db upgrade
 
 ## Running the Website
 
+#### 1. Direct Python Run:
+```
+python run.py
+```
+#### 2. Using Flask CLI:
+
+Create `.env` file in root folder with following:
+
+```markdown
+FLASK_APP=run.py
+FLASK_ENV=development
+DATABASE_URL=sqlite:///todo.db
+SECRET_KEY=your-secret-key
+```
+
+Then run:
 ```bash
 flask run
 ```
@@ -92,5 +98,5 @@ flask run
 ## Author
 
 **Vyshak**
-[GitHub](https://github.com/Vyshak-NSC)
-Email: vyshaknsc02@gmail.com
+* Github - [Vyshak-NSC](https://github.com/Vyshak-NSC)
+* Email - [vyshaknsc02@gmail.com](mailto:vyshaknsc02@gmail.com)

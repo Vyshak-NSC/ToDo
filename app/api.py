@@ -69,7 +69,7 @@ def toggle_status(uid):
     todo.status = not todo.status
     db.session.commit()
     
-    return jsonify(todo_schema.dump(todo))
+    return jsonify(todo_schema.dump(todo)), 200
 
 @api_bp.route('/todos/<int:uid>', methods=['DELETE'])
 def delete_todo(uid):
