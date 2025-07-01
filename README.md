@@ -80,7 +80,6 @@ venv/scripts/activate
 Run:
 ```
 python run.py
-
 ```
 #### 2. Using Flask CLI:
 - To run withou real time update for development.
