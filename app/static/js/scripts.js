@@ -14,7 +14,11 @@ async function fetchTodos(){
             const item = document.createElement('div');
             item.classList.add('todo-item');
             item.id = todo.uid;
-
+            
+            const timestmp = document.createElement('p');
+            timestmp.classList.add('todo-timestmp');
+            timestmp.textContent = `${todo.date}`
+            
             const title = document.createElement('p');
             title.classList.add('todo-title');
             title.textContent = `${todo.title}`;
@@ -34,6 +38,7 @@ async function fetchTodos(){
                 <span></span>
                 </label>
             `
+            content.appendChild(timestmp);
             content.appendChild(title);
             content.appendChild(text);
             
@@ -83,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     todoItem.classList.remove('error-toggle')
                 },1400)
             }
-
         }
     })
 })

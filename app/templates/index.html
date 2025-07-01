@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }} ">
-    <title>ToDo</title>
+    <title>Todos</title>
 </head>
 <body>
-    <h1>ToDo</h1>
+    <nav>
+        <h1>Todos</h1>
+        <button id="add-todo">Add Todo</button>
+    </nav>
     <div id="todo-list">
         Loading...
     </div>
