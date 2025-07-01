@@ -5,8 +5,9 @@ A simple RESTful ToDo website built with Flask,SQLAlchemy and Marshmallow.
 ## Features
 
 - Add, view, update and delete tasks
+- Real time updates
 - JSON based responses
-- List all or selected task
+- List all or selected task (API only)
 - Toggle task status
 
 ## Dependencies
@@ -18,6 +19,8 @@ A simple RESTful ToDo website built with Flask,SQLAlchemy and Marshmallow.
 - SQLAlchemy 2.0.41
 - SQLite
 - Marshmallow 4.0.0
+- Flask-SocketIO
+- eventlet
 
 ## Project Structure
 ```
@@ -64,11 +67,24 @@ flask db upgrade
 
 ## Running the Website
 
-#### 1. Direct Python Run:
+#### 1. Direct Python Run with WebSocket Support:
+- Enables Flask-SocketIO for real time data updates.
+- Slower reloads.
+- Set `debug=True` in `socketio.run()` inside `run.py` to enable live reloads.
+
+Set up virtual env for project isolation (Optional).
+```
+python -m venv venv
+venv/scripts/activate
+```
+Run:
 ```
 python run.py
+
 ```
 #### 2. Using Flask CLI:
+- To run withou real time update for development.
+- Provides faster reloads.
 
 Create `.env` file in root folder with following:
 
@@ -84,10 +100,13 @@ Then run:
 flask run
 ```
 
+Run with `--debug` arg for live reloads.
+
 ## API Endpoints
 
 | Method | Endpoint               | Description              | Request Body       |
 |--------|------------------------|--------------------------|--------------------|
+| GET    | `/ping`               | Get ping                 | –                  |
 | GET    | `/todos`              | Get all todos            | –                  |
 | GET    | `/todos/<id>`         | Get a single todo        | –                  |
 | POST   | `/todos`              | Create a new todo        | `{ "title": "...", "content": "..." }` |
@@ -98,5 +117,5 @@ flask run
 ## Author
 
 **Vyshak**
-* Github - [Vyshak-NSC](https://github.com/Vyshak-NSC)
-* Email - [vyshaknsc02@gmail.com](mailto:vyshaknsc02@gmail.com)
+- Github - [Vyshak-NSC](https://github.com/Vyshak-NSC)
+- Email - [vyshaknsc02@gmail.com](mailto:vyshaknsc02@gmail.com)

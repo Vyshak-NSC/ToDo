@@ -1,5 +1,9 @@
+::-webkit-scrollbar{
+    display: none;
+}
+
 nav{
-    top: 10px;
+    top: 0;
     left: 10px;
     right: 10px;
     z-index: 10;
@@ -12,14 +16,14 @@ nav{
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(135deg, rgba(190,220,255,0.6) 0%, rgba(150, 170, 255,0.6) 100%);
+    background: linear-gradient(135deg, rgba(190,220,255,1) 0%, rgba(60,90,150,0.95) 100%);
 }
 
 #add-todo{
     border: none;
     height: 2rem;
     outline: none;
-    color: #ccc;
+    color: #fff;
     padding: 0 1rem;
     cursor: pointer;
     font-weight: 600;
@@ -27,7 +31,7 @@ nav{
     background-color: #5252e4;
     transition: background 0.2s box-shadow 0.2s;
     box-shadow: 0 2px 8px rgba(80, 120, 200, 0.2);
-    background: linear-gradient(135deg, #4f8cff 0%, #38a9ff 100%);
+    background: linear-gradient(135deg, #5b92f8 0%, #38a9ff 100%);
 }
 
 #a1dd-todo:hover, #add-todo:focus {
@@ -50,7 +54,7 @@ nav{
     border-radius: 12px;
     backdrop-filter: blur(2px);
     justify-content: space-between;
-    border: 1px solid rgba(120, 120, 200, 0.15);
+    border: 2px solid rgba(120, 120, 200, 0.15);
     box-shadow: 0 4px 16px rgba(80, 120, 200, 0.10), 
                 0 1.5px 4px rgba(100, 100, 100, .10),
                 inset 0 1px 8px rgba(180, 200, 255, 0.15);
@@ -135,7 +139,7 @@ nav{
 
 @keyframes success-blink {
     from {border: 2px solid #4caf50}
-    to   {border: 2px solid transparent}
+    to   {border: 2px solid rgba(120, 120, 200, 0.15);}
 }
 
 .error-toggle{
@@ -145,5 +149,99 @@ nav{
 
 @keyframes error-blink {
     from {border: 2px solid red}
-    to   {border: 2px solid transparent}
+    to   {border: 2px solid rgba(120, 120, 200, 0.15);}
+}
+
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup {
+  background: linear-gradient(145deg, #f7f9fd, #dfe9f3);
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 400px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  z-index: 100;
+}
+
+.title-box,
+.content-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.title-box label,
+.content-box label {
+  font-weight: 600;
+  color: #2b2b2b;
+}
+
+.title-box input,
+.content-box input {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #c0c0c0;
+  background-color: #ffffff;
+  font-size: 1rem;
+  color: #222;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.title-box input:focus,
+.content-box input:focus {
+  border-color: #3a78f2;
+  box-shadow: 0 0 4px rgba(58, 120, 242, 0.3);
+  outline: none;
+}
+
+.button-box {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+#cancel,
+#submit {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+#cancel {
+  background-color: #e2e2e2;
+  color: #333;
+}
+
+#cancel:hover {
+  background-color: #d0d0d0;
+}
+
+#submit {
+  background-color: #3a78f2;
+  color: white;
+  box-shadow: 0 2px 6px rgba(58, 120, 242, 0.4);
+}
+
+#submit:hover {
+  background-color: #2e65d4;
 }

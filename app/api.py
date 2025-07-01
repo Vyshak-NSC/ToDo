@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, jsonify, request
 from app.models import Todo
 from app.schemas import TodoSchema
-from app import db
+from app import db, socketio
 
 todo_schema = TodoSchema()
 todos_schema = TodoSchema(many=True)
@@ -69,6 +69,7 @@ def toggle_status(uid):
     todo.status = not todo.status
     db.session.commit()
     
+    socketio.emit('todo_update', {'action':'updated'})
     return jsonify(todo_schema.dump(todo)), 200
 
 @api_bp.route('/todos/<int:uid>', methods=['DELETE'])

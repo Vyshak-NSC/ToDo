@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from dotenv import load_dotenv
-from app.extensions import db, migrate, ma
+from app.extensions import db, migrate, ma, socketio
 from flask_cors import CORS
 
 load_dotenv()
@@ -12,6 +12,7 @@ def create_app():
     
     db.init_app(app)
     ma.init_app(app)
+    socketio.init_app(app, cors_allowed_origins='*')
     migrate.init_app(app, db)
     CORS(app)
     

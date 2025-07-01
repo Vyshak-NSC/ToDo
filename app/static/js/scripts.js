@@ -1,3 +1,9 @@
+const socket = io();
+
+socket.on('todo_update', (data) => {
+    fetchTodos();
+});
+
 async function fetchTodos(){
     const container = document.getElementById('todo-list')
     try{
@@ -47,16 +53,64 @@ async function fetchTodos(){
 
             container.appendChild(item)
         });
-
     }catch{
         container.innerHTML = 'Failed to load todos'
     }
 }
 
+function openPopup(){
+    const popup = document.createElement('div');
+    const popupOverlay = document.createElement('div');
+    const titleBox = document.createElement('div')
+    const contentBox = document.createElement('div')
+    const buttonBox = document.createElement('div')
+    const submit = document.createElement('button')
+    const cancel = document.createElement('button')
+    
+    popup.classList.add('popup');
+    popupOverlay.classList.add('popup-overlay');
+    
+    submit.id = 'submit';
+    cancel.id = 'cancel';
+    titleBox.classList.add('title-box');
+    buttonBox.classList.add('button-box');
+    contentBox.classList.add('content-box');
+
+    titleBox.innerHTML = `
+        <label for="title-input" name="title">Title</label>
+        <input type="text" name ="title" id="title-input">
+    `
+    contentBox.innerHTML = `
+        <label for="content-input" name="content">Content</label>
+        <input type="text" name ="content" id="content-input">
+    `
+
+    submit.textContent = 'Submit';
+    cancel.textContent = 'Cancel';
+
+    cancel.addEventListener('click', () => {
+        closePopup();
+    })
+
+    buttonBox.appendChild(cancel);
+    buttonBox.appendChild(submit);
+    
+    popup.appendChild(titleBox);
+    popup.appendChild(contentBox);
+    popup.appendChild(buttonBox);
+
+    popupOverlay.appendChild(popup)
+    document.body.appendChild(popupOverlay);
+    document.body.style.overflow = 'hidden';
+    
+    function closePopup(){
+        document.body.removeChild(popupOverlay);
+        document.body.style.overflow = ''
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     fetchTodos();
-
     document.getElementById('todo-list').addEventListener('change', async function(e){
         if(e.target.type === 'checkbox'){
             const todoItem = e.target.closest('.todo-item')
@@ -70,13 +124,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         'Content-Type': 'application/json'
                     }
                 })
-
                 if(response.ok){
                     todoItem.classList.add('success-toggle');
                     setTimeout(() => {
                     todoItem.classList.remove('success-toggle')
                 },1400)
                 }else{
+                    console.log('status:',response.status)
                     throw new Error('error')
                 }
                 const data = await response.json();
