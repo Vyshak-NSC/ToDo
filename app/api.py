@@ -41,6 +41,9 @@ def get_todo(uid):
 
 @api_bp.route('/todos', methods=['POST'])
 def create_todo():
+    if not request.is_json:
+        return jsonify({"error": "Request content-type must be application/json"}), 400
+
     data = request.get_json()
     if not data:
         return jsonify({"error":"No data provided"}),400

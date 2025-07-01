@@ -246,7 +246,6 @@ nav{
   background-color: #2e65d4;
 }
 
-
 .pagination {
   display: flex;
   justify-content: center;
@@ -263,14 +262,41 @@ nav{
 .pagination button {
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  background-color: #4059fb;
-  color: white;
   border: none;
   cursor: pointer;
   font-weight: 600;
-  min-width: 100px;
+  width: 100px;
+  background: linear-gradient(135deg, #5b92f8 0%, #38a9ff 100%);
+  color: white;
+  box-shadow: 0 2px 6px rgba(80, 120, 200, 0.3);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
-.pagination button:hover {
+button:disabled{
+  cursor:default;
+  opacity: 0.5;
+}
+
+.pagination button:not(:disabled):hover {
   background-color: #3045c7;
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    display: flex;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    bottom: 0;
+    padding: 20px 0;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .pagination button {
+    width: 20%;
+  }
+
+  #todo-list {
+    padding-bottom: 100px;
+  }
 }

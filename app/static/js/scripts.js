@@ -7,7 +7,7 @@ socket.on('todo_update', (data) => {
 });
 
 let currentPage = 1;
-const perPage = 5;
+const perPage = 12;
 
 async function fetchTodos(page=1){
     const container = document.getElementById('todo-list')
@@ -72,31 +72,36 @@ function displayPaginated(current, totalPages){
     const container = document.getElementById('todo-list');
     const pagination = document.createElement('div');
     pagination.className = 'pagination';
+    const isMobile = window.innerWidth <= 480;
+
+    const prevBtn = document.createElement('button');
+    const firstBtn = document.createElement('button');
+    prevBtn.textContent  = isMobile ? '<' : 'Previous';
+    firstBtn.textContent = isMobile ? '<<': 'First';
+
+    const nextBtn = document.createElement('button');
+    const lastBtn = document.createElement('button');
+    nextBtn.textContent = isMobile ? '>' : 'Next';
+    lastBtn.textContent = isMobile ? '>>' : 'Last';
+    
+    pagination.appendChild(firstBtn);
+    pagination.appendChild(prevBtn);
+    
+    pagination.appendChild(nextBtn);
+    pagination.appendChild(lastBtn);
 
     if(current > 1){
-        const prevBtn = document.createElement('button');
-        const firstBtn = document.createElement('button');
-        prevBtn.textContent = 'Previous';
-        firstBtn.textContent = 'First';
-
         prevBtn.onclick = () => fetchTodos(current-1);
         firstBtn.onclick = () => fetchTodos(1);
-        
-        pagination.appendChild(firstBtn);
-        pagination.appendChild(prevBtn);
+    }else{
+        prevBtn.disabled = true;
     }
 
     if(current < totalPages){
-        const nextBtn = document.createElement('button');
-        const lastBtn = document.createElement('button');
-        nextBtn.textContent = 'Next';
-        lastBtn.textContent = 'Last';
-
         nextBtn.onclick = () => fetchTodos(current+1)
         lastBtn.onclick = () => fetchTodos(totalPages)
-
-        pagination.appendChild(nextBtn);
-        pagination.appendChild(lastBtn);
+    }else{
+        nextBtn.disabled = true;
     }
 
     container.appendChild(pagination);
@@ -132,11 +137,11 @@ function openPopup(){
     submit.textContent = 'Submit';
     cancel.textContent = 'Cancel';
 
-    // popupOverlay.addEventListener('click', (e) => {
-    //     if(e.target === popupOverlay){
-    //         closePopup();
-    //     }
-    // })
+    popupOverlay.addEventListener('click', (e) => {
+        if(e.target === popupOverlay){
+            closePopup();
+        }
+    })
 
     cancel.onclick = () => closePopup();
 
