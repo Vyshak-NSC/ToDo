@@ -63,6 +63,7 @@ def create_todo():
         db.session.rollback()
         return jsonify({"error":f"Database error: {e}"}),500
 
+    socketio.emit('todo_event', {'action':'created'})
     return jsonify(todo_schema.dump(new_todo)), 201
 
 @api_bp.route('/todos/<int:uid>', methods=['PATCH'])
@@ -88,7 +89,8 @@ def update_todo(uid):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error":f"Database error: {e}"}),500
-
+    
+    socketio.emit('todo_event', {'action':'updated'})
     return jsonify(todo_schema.dump(todo))
 
 # Specialised endpoint for status toggle
@@ -103,7 +105,7 @@ def toggle_status(uid):
         db.session.rollback()
         return jsonify({"error":f"Database error: {e}"}),500
 
-    socketio.emit('todo_update', {'action':'updated'})
+    socketio.emit('todo_event', {'action':'updated'})
     return jsonify(todo_schema.dump(todo)), 200
 
 @api_bp.route('/todos/<int:uid>', methods=['DELETE'])

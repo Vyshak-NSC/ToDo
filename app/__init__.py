@@ -12,7 +12,7 @@ def create_app():
     
     db.init_app(app)
     ma.init_app(app)
-    socketio.init_app(app, cors_allowed_origins='*')
+    socketio.init_app(app, cors_allowed_origins='*', async_mode='threading')
     migrate.init_app(app, db)
     CORS(app)
     
@@ -21,7 +21,10 @@ def create_app():
         
     @app.errorhandler(404)
     def not_found(e):
-        return jsonify({"error":e.description or "Resource not found"})
+        return jsonify({
+            "error": "Not Found",
+            "message": e.description or "The requested resource was not found"
+        }), 404
         
     from .blueprints.main import main_bp
     from .api import api_bp

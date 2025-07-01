@@ -2,8 +2,11 @@
 const socket = io({
     transports:['websocket']
 });
-socket.on('todo_update', (data) => {
-    setTimeout(fetchTodos, 1500);
+socket.on('todo_event', (data) => {
+    const {action} = data;
+    if(['created','updated','deleted'].includes(action)){
+        setTimeout(fetchTodos, 1500);
+    }
 });
 
 let currentPage = 1;
@@ -83,9 +86,14 @@ function displayPaginated(current, totalPages){
     const lastBtn = document.createElement('button');
     nextBtn.textContent = isMobile ? '>' : 'Next';
     lastBtn.textContent = isMobile ? '>>' : 'Last';
+
+    const pages = document.createElement('p')
+    pages.textContent = `${current} of ${totalPages}`
     
     pagination.appendChild(firstBtn);
     pagination.appendChild(prevBtn);
+
+    pagination.appendChild(pages);
     
     pagination.appendChild(nextBtn);
     pagination.appendChild(lastBtn);
@@ -137,6 +145,11 @@ function openPopup(){
     submit.textContent = 'Submit';
     cancel.textContent = 'Cancel';
 
+    submit.onclick = async () => {
+        createTodo();
+        closePopup();
+    }
+
     popupOverlay.addEventListener('click', (e) => {
         if(e.target === popupOverlay){
             closePopup();
@@ -161,6 +174,35 @@ function openPopup(){
         document.body.style.overflow = ''
     }
 }
+
+async function createTodo(){
+    const title = document.getElementById('title-input').value.trim();
+    const content = document.getElementById('content-input').value.trim();
+
+    if(!title || !content){
+        showErrorToast('Both Title and Content required');
+    }
+
+    try{
+        const res = await fetch('api/todos',{
+            method:'POST',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({ title, content })
+        });
+
+        if(!res.ok){
+            const e = await res.json();
+            showErrorToast(e.error || 'An error occured.')
+            return;
+        }
+        fetchTodos();
+    }catch{
+        showErrorToast("An error occured.")
+    }
+}
+
 function showErrorToast(message) {
     const toast = document.getElementById('error-toast');
     toast.textContent = message;
@@ -186,7 +228,17 @@ document.addEventListener("DOMContentLoaded", () => {
                         'Content-Type': 'application/json'
                     }
                 })
-                if(response.ok){
+                if(!response.ok){
+                    let errorMsg = 'Failed to toggle item.';
+                    try {
+                        const errJson = await response.json();
+                        errorMsg = errJson.error || JSON.stringify(errJson);
+                    } catch {
+                        const fallback = await response.text();
+                        errorMsg = fallback;
+                    }
+                    showErrorToast(errorMsg);
+                }else{
                     const data = await response.json();
                     todoCheckbox.checked = data.status;
                     
@@ -194,17 +246,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     setTimeout(() => {
                         todoItem.classList.remove('success-toggle')
                     },1400)
-                }else{
-                     // Try to extract error message from Flask response
-        let errorMsg = 'Failed to toggle item.';
-        try {
-            const errJson = await response.json();
-            errorMsg = errJson.error || JSON.stringify(errJson);
-        } catch {
-            const fallback = await response.text();
-            errorMsg = fallback;
-        }
-         showErrorToast(errorMsg); // Better UX
                 }
                 
             }catch(error){
