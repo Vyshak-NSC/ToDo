@@ -20,9 +20,18 @@ def ping():
 
 @api_bp.route('/todos', methods=['GET'])
 def get_all_todos():
-    todos = Todo.query.all()
-    return jsonify(todos_schema.dump(todos))
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=10, type=int)
+    
+    paginated_todos = Todo.query.order_by(Todo.date.desc()).paginate(page=page, per_page=per_page)
 
+    return jsonify({
+        "todos": todos_schema.dump(paginated_todos.items),
+        "page": paginated_todos.page,
+        "per_page":paginated_todos.per_page,
+        "total":paginated_todos.total,
+        "pages":paginated_todos.pages
+    })
 
 @api_bp.route('/todos/<int:uid>', methods=['GET'])
 def get_todo(uid):
@@ -33,15 +42,24 @@ def get_todo(uid):
 @api_bp.route('/todos', methods=['POST'])
 def create_todo():
     data = request.get_json()
+    if not data:
+        return jsonify({"error":"No data provided"}),400
     
     errors = todo_schema.validate(data)
     if errors:
-        return jsonify(errors), 400
+        return jsonify({
+            "error": "Validation failed",
+            "details": errors
+        }), 400
     
     new_todo = Todo(**data)
     db.session.add(new_todo)
-    db.session.commit()
-    
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error":f"Database error: {e}"}),500
+
     return jsonify(todo_schema.dump(new_todo)), 201
 
 @api_bp.route('/todos/<int:uid>', methods=['PATCH'])
@@ -49,16 +67,25 @@ def update_todo(uid):
     todo = get_todo_or_abort(uid)
     
     data = request.get_json()
+    if not data:
+        return jsonify({"error":"No data provided"}),400
     errors = todo_schema.validate(data, partial=True)
     
     if errors:
-        return jsonify(errors), 400
+        return jsonify({
+            "error": "Validation failed",
+            "details": errors
+        }), 400
     
     for key, value in data.items():
         setattr(todo, key, value)
     
-    db.session.commit()
-    
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error":f"Database error: {e}"}),500
+
     return jsonify(todo_schema.dump(todo))
 
 # Specialised endpoint for status toggle
@@ -67,8 +94,12 @@ def toggle_status(uid):
     todo = get_todo_or_abort(uid)
     
     todo.status = not todo.status
-    db.session.commit()
-    
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error":f"Database error: {e}"}),500
+
     socketio.emit('todo_update', {'action':'updated'})
     return jsonify(todo_schema.dump(todo)), 200
 
@@ -77,6 +108,10 @@ def delete_todo(uid):
     todo = get_todo_or_abort(uid)
     
     db.session.delete(todo)
-    db.session.commit()
-    
-    return jsonify({"message":f"Item uid: {uid} deleted"})
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error":f"Database error: {e}"}),500
+
+    return jsonify({"success": True, "uid": uid}), 200

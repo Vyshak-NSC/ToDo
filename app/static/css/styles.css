@@ -245,3 +245,32 @@ nav{
 #submit:hover {
   background-color: #2e65d4;
 }
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  margin-top: 0;
+  gap: 1rem;
+  z-index: 20;
+}
+
+
+.pagination button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  background-color: #4059fb;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  min-width: 100px;
+}
+
+.pagination button:hover {
+  background-color: #3045c7;
+}

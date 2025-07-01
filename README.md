@@ -103,15 +103,15 @@ Run with `--debug` arg for live reloads.
 
 ## API Endpoints
 
-| Method | Endpoint               | Description              | Request Body       |
-|--------|------------------------|--------------------------|--------------------|
-| GET    | `/ping`               | Get ping                 | –                  |
-| GET    | `/todos`              | Get all todos            | –                  |
-| GET    | `/todos/<id>`         | Get a single todo        | –                  |
-| POST   | `/todos`              | Create a new todo        | `{ "title": "...", "content": "..." }` |
-| PATCH  | `/todos/<id>`         | Update a todo            | Partial or full todo fields |
-| PATCH  | `/todos/<id>/toggle`  | Toggle todo status       | –                  |
-| DELETE | `/todos/<id>`         | Delete a todo            | –                  |
+| Method | Endpoint              | Description              | Request Body                          | Query Params             |
+|--------|-----------------------|--------------------------|----------------------------------------|--------------------------|
+| GET    | `/ping`               | Health check ping        | –                                      | –                        |
+| GET    | `/todos`              | Get all todos (paginated) | –                                     | `page`, `per_page` (optional) |
+| GET    | `/todos/<id>`         | Get a single todo        | –                                      | –                        |
+| POST   | `/todos`              | Create a new todo        | `{ "title": "...", "content": "..." }` | –                        |
+| PATCH  | `/todos/<id>`         | Update a todo            | Partial or full todo fields            | –                        |
+| PATCH  | `/todos/<id>/toggle`  | Toggle todo status       | –                                      | –                        |
+| DELETE | `/todos/<id>`         | Delete a todo            | –                                      | –                        |
 
 ## Author
 

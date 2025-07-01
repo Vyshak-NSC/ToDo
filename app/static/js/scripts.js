@@ -1,17 +1,23 @@
+// Manage live updates
 const socket = io({
     transports:['websocket']
 });
-
 socket.on('todo_update', (data) => {
     setTimeout(fetchTodos, 1500);
 });
 
-async function fetchTodos(){
+let currentPage = 1;
+const perPage = 5;
+
+async function fetchTodos(page=1){
     const container = document.getElementById('todo-list')
     try{
-        const response = await fetch('/api/todos');
-        const todos = await response.json();
-    
+        const response = await fetch(`/api/todos?page=${page}&per_page=${perPage}`);
+        const result = await response.json();
+
+        const todos = result.todos;
+        currentPage = result.page;
+
         if(todos.length === 0){
             container.innerHTML = `<p>No todos found!</p>`
             return;
@@ -55,9 +61,45 @@ async function fetchTodos(){
 
             container.appendChild(item)
         });
+
+        displayPaginated(result.page, result.pages)
     }catch{
         container.innerHTML = 'Failed to load todos'
     }
+}
+
+function displayPaginated(current, totalPages){
+    const container = document.getElementById('todo-list');
+    const pagination = document.createElement('div');
+    pagination.className = 'pagination';
+
+    if(current > 1){
+        const prevBtn = document.createElement('button');
+        const firstBtn = document.createElement('button');
+        prevBtn.textContent = 'Previous';
+        firstBtn.textContent = 'First';
+
+        prevBtn.onclick = () => fetchTodos(current-1);
+        firstBtn.onclick = () => fetchTodos(1);
+        
+        pagination.appendChild(firstBtn);
+        pagination.appendChild(prevBtn);
+    }
+
+    if(current < totalPages){
+        const nextBtn = document.createElement('button');
+        const lastBtn = document.createElement('button');
+        nextBtn.textContent = 'Next';
+        lastBtn.textContent = 'Last';
+
+        nextBtn.onclick = () => fetchTodos(current+1)
+        lastBtn.onclick = () => fetchTodos(totalPages)
+
+        pagination.appendChild(nextBtn);
+        pagination.appendChild(lastBtn);
+    }
+
+    container.appendChild(pagination);
 }
 
 function openPopup(){
@@ -74,9 +116,9 @@ function openPopup(){
     
     submit.id = 'submit';
     cancel.id = 'cancel';
-    titleBox.classList.add('title-box');
-    buttonBox.classList.add('button-box');
-    contentBox.classList.add('content-box');
+    titleBox.className ='title-box';
+    buttonBox.className ='button-box';
+    contentBox.className ='content-box';
 
     titleBox.innerHTML = `
         <label for="title-input" name="title">Title</label>
@@ -90,9 +132,13 @@ function openPopup(){
     submit.textContent = 'Submit';
     cancel.textContent = 'Cancel';
 
-    cancel.addEventListener('click', () => {
-        closePopup();
-    })
+    // popupOverlay.addEventListener('click', (e) => {
+    //     if(e.target === popupOverlay){
+    //         closePopup();
+    //     }
+    // })
+
+    cancel.onclick = () => closePopup();
 
     buttonBox.appendChild(cancel);
     buttonBox.appendChild(submit);
@@ -109,6 +155,15 @@ function openPopup(){
         document.body.removeChild(popupOverlay);
         document.body.style.overflow = ''
     }
+}
+function showErrorToast(message) {
+    const toast = document.getElementById('error-toast');
+    toast.textContent = message;
+    toast.style.display = 'block';
+
+    setTimeout(() => {
+        toast.style.display = 'none';
+    }, 3000);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -127,18 +182,26 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 })
                 if(response.ok){
+                    const data = await response.json();
+                    todoCheckbox.checked = data.status;
+                    
                     todoItem.classList.add('success-toggle');
                     setTimeout(() => {
-                    todoItem.classList.remove('success-toggle')
-                },1400)
+                        todoItem.classList.remove('success-toggle')
+                    },1400)
                 }else{
-                    throw new Error('error')
+                     // Try to extract error message from Flask response
+        let errorMsg = 'Failed to toggle item.';
+        try {
+            const errJson = await response.json();
+            errorMsg = errJson.error || JSON.stringify(errJson);
+        } catch {
+            const fallback = await response.text();
+            errorMsg = fallback;
+        }
+         showErrorToast(errorMsg); // Better UX
                 }
-                console.log('status:',response.status)
-                console.log('status:',response.ok)
-
-                const data = await response.json();
-                todoCheckbox.checked = data.status;
+                
             }catch(error){
                 todoItem.classList.add('error-toggle')
                 todoCheckbox.checked = !todoCheckbox.checked;
