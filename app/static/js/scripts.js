@@ -1,7 +1,9 @@
-const socket = io();
+const socket = io({
+    transports:['websocket']
+});
 
 socket.on('todo_update', (data) => {
-    fetchTodos();
+    setTimeout(fetchTodos, 1500);
 });
 
 async function fetchTodos(){
@@ -130,9 +132,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     todoItem.classList.remove('success-toggle')
                 },1400)
                 }else{
-                    console.log('status:',response.status)
                     throw new Error('error')
                 }
+                console.log('status:',response.status)
+                console.log('status:',response.ok)
+
                 const data = await response.json();
                 todoCheckbox.checked = data.status;
             }catch(error){
