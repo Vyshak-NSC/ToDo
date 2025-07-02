@@ -99,20 +99,18 @@ nav{
 
 .todo-title{
   font-weight: bold;
-  text-transform:capitalize;
-  top: 1rem;
+  text-transform: capitalize;
   max-width: 80%;
-  position: absolute;
-}
+  margin-bottom: 0.5rem;
+  position: relative;
+  }
 
 .todo-text{
   max-height: 90%;
   overflow-y: auto;
-  padding-top: 1.5rem;
   line-height: 1.1rem;
   padding-right: 1rem;
-  /* scrollbar-width: thin; */
-  /* scrollbar-color: #4f8cff transparent; */
+  
 }
 
 .todo-text::-webkit-scrollbar{
