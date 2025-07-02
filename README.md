@@ -39,7 +39,10 @@ TODO/
 │   │   ├── css/
 │   │   │   └── styles.css
 │   │   └── js/
-│   │       └── scripts.js
+│   │       ├── api.js
+│   │       ├── dom.js
+│   │       ├── scripts.js
+│   │       └── utils.js
 │   └── templates/
 │       └── index.html
 ├── migrations/

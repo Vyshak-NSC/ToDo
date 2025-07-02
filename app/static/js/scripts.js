@@ -1,22 +1,19 @@
+import { showErrorToast, socketSetup } from './utils.js'
+import { fetchTodosAPI, toggleTodoAPI } from './api.js';
+import { createTodoItem, openPopup } from './dom.js';
+
 // Manage live updates
-const socket = io({
-    transports:['websocket']
-});
-socket.on('todo_event', (data) => {
-    const {action} = data;
-    if(['created','updated','deleted'].includes(action)){
-        setTimeout(fetchTodos, 1500);
-    }
-});
+const socket = io({ transports:['websocket'] });
+socketSetup(socket, fetchTodos);
+
 
 let currentPage = 1;
 const perPage = 12;
 
-async function fetchTodos(page=1){
+export async function fetchTodos(page=1){
     const container = document.getElementById('todo-list')
     try{
-        const response = await fetch(`/api/todos?page=${page}&per_page=${perPage}`);
-        const result = await response.json();
+        const result = await fetchTodosAPI(page,perPage);
 
         const todos = result.todos;
         currentPage = result.page;
@@ -28,40 +25,7 @@ async function fetchTodos(page=1){
         container.innerHTML = ''
 
         todos.forEach(todo => {
-            const item = document.createElement('div');
-            item.classList.add('todo-item');
-            item.id = todo.uid;
-            
-            const timestmp = document.createElement('p');
-            timestmp.classList.add('todo-timestmp');
-            timestmp.textContent = `${todo.date}`
-            
-            const title = document.createElement('p');
-            title.classList.add('todo-title');
-            title.textContent = `${todo.title}`;
-
-            const content = document.createElement('div');
-            content.classList.add('todo-content');
-            
-            const text = document.createElement('p');
-            text.classList.add('todo-text');
-            text.textContent = `${todo.content}`
-
-            const status = document.createElement('div');
-            status.classList.add('todo-status');
-            status.innerHTML =`
-                <label class="circle-checkbox">
-                <input type="checkbox" id="todo-${todo.uid}" ${todo.status ? "checked" : ""}>
-                <span></span>
-                </label>
-            `
-            content.appendChild(timestmp);
-            content.appendChild(title);
-            content.appendChild(text);
-            
-            item.appendChild(content);
-            item.appendChild(status);
-
+            const item = createTodoItem(todo);
             container.appendChild(item)
         });
 
@@ -115,106 +79,10 @@ function displayPaginated(current, totalPages){
     container.appendChild(pagination);
 }
 
-function openPopup(){
-    const popup = document.createElement('div');
-    const popupOverlay = document.createElement('div');
-    const titleBox = document.createElement('div')
-    const contentBox = document.createElement('div')
-    const buttonBox = document.createElement('div')
-    const submit = document.createElement('button')
-    const cancel = document.createElement('button')
-    
-    popup.classList.add('popup');
-    popupOverlay.classList.add('popup-overlay');
-    
-    submit.id = 'submit';
-    cancel.id = 'cancel';
-    titleBox.className ='title-box';
-    buttonBox.className ='button-box';
-    contentBox.className ='content-box';
-
-    titleBox.innerHTML = `
-        <label for="title-input" name="title">Title</label>
-        <input type="text" name ="title" id="title-input">
-    `
-    contentBox.innerHTML = `
-        <label for="content-input" name="content">Content</label>
-        <input type="text" name ="content" id="content-input">
-    `
-
-    submit.textContent = 'Submit';
-    cancel.textContent = 'Cancel';
-
-    submit.onclick = async () => {
-        createTodo();
-        closePopup();
-    }
-
-    popupOverlay.addEventListener('click', (e) => {
-        if(e.target === popupOverlay){
-            closePopup();
-        }
-    })
-
-    cancel.onclick = () => closePopup();
-
-    buttonBox.appendChild(cancel);
-    buttonBox.appendChild(submit);
-    
-    popup.appendChild(titleBox);
-    popup.appendChild(contentBox);
-    popup.appendChild(buttonBox);
-
-    popupOverlay.appendChild(popup)
-    document.body.appendChild(popupOverlay);
-    document.body.style.overflow = 'hidden';
-    
-    function closePopup(){
-        document.body.removeChild(popupOverlay);
-        document.body.style.overflow = ''
-    }
-}
-
-async function createTodo(){
-    const title = document.getElementById('title-input').value.trim();
-    const content = document.getElementById('content-input').value.trim();
-
-    if(!title || !content){
-        showErrorToast('Both Title and Content required');
-    }
-
-    try{
-        const res = await fetch('api/todos',{
-            method:'POST',
-            headers: {
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify({ title, content })
-        });
-
-        if(!res.ok){
-            const e = await res.json();
-            showErrorToast(e.error || 'An error occured.')
-            return;
-        }
-        fetchTodos();
-    }catch{
-        showErrorToast("An error occured.")
-    }
-}
-
-function showErrorToast(message) {
-    const toast = document.getElementById('error-toast');
-    toast.textContent = message;
-    toast.style.display = 'block';
-
-    setTimeout(() => {
-        toast.style.display = 'none';
-    }, 3000);
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     fetchTodos();
+    document.getElementById('add-todo').addEventListener('click',openPopup);
+
     document.getElementById('todo-list').addEventListener('change', async function(e){
         if(e.target.type === 'checkbox'){
             const todoItem = e.target.closest('.todo-item')
@@ -222,12 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const todoCheckbox = e.target;
 
             try{
-                const response = await fetch(`/api/todos/${todoId}/toggle`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+                const response = await toggleTodoAPI(todoId);
                 if(!response.ok){
                     let errorMsg = 'Failed to toggle item.';
                     try {

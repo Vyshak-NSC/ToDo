@@ -9,7 +9,7 @@
 <body>
     <nav>
         <h1>Todos</h1>
-        <button id="add-todo" onclick="openPopup()">Add Todo</button>
+        <button id="add-todo">Add Todo</button>
     </nav>
     <div id="todo-list">
         Loading...
@@ -19,6 +19,6 @@ background-color: rgba(200, 50, 50, 0.9); color: white; padding: 10px 20px;
 border-radius: 6px; z-index: 999; font-weight: 500;"></div>
 
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </body>
 </html>

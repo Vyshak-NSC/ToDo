@@ -119,4 +119,5 @@ def delete_todo(uid):
         db.session.rollback()
         return jsonify({"error":f"Database error: {e}"}),500
 
+    socketio.emit('todo_event', {'action':'deleted'})
     return jsonify({"success": True, "uid": uid}), 200

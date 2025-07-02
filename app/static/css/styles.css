@@ -68,10 +68,27 @@ nav{
     text-align: justify;
 }
 
-.todo-timestmp{
+.todo-header{
     top: 0;
     right: 1rem;
+    display: flex;
+    flex-direction: row;
     position: absolute;
+}
+
+.delete-btn{
+   background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  height: 2.2rem;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-top: 10px;
+  opacity: 0.8;
+}
+
+.delete-btn:active{
+  opacity: 1;
 }
 
 .todo-title{
