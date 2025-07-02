@@ -10,7 +10,7 @@ from app.models import *
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object('config.Config')
     
     db.init_app(app)
     ma.init_app(app)
