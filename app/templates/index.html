@@ -8,15 +8,16 @@
 </head>
 <body>
     <nav>
-        <h1>Todos -- under construction</h1>
+        <h1>My Todos -- under construction</h1>
         <button id="add-todo">Add Todo</button>
     </nav>
     <div id="todo-list">
         Loading...
     </div>
-    <div id="error-toast" style="display:none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-background-color: rgba(200, 50, 50, 0.9); color: white; padding: 10px 20px;
-border-radius: 6px; z-index: 999; font-weight: 500;"></div>
+    <div id="error-toast" style="display:none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+        background-color: rgba(200, 50, 50, 0.9); color: white; padding: 10px 20px;
+        border-radius: 6px; z-index: 999; font-weight: 500;">
+    </div>
 
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script type="module" src="{{ url_for('static', filename='js/scripts.js') }}"></script>

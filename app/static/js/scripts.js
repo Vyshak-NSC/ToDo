@@ -8,7 +8,7 @@ socketSetup(socket, fetchTodos);
 
 
 let currentPage = 1;
-const perPage = 12;
+const perPage = 15;
 
 export async function fetchTodos(page=1){
     const container = document.getElementById('todo-list')
@@ -62,6 +62,15 @@ function displayPaginated(current, totalPages){
     pagination.appendChild(nextBtn);
     pagination.appendChild(lastBtn);
 
+
+    if(current===totalPages){
+        lastBtn.disabled = true;
+    }
+    if(totalPages===1){
+        pagination.style.display = 'none'
+    }else{
+        pagination.style.display = ''
+    }
     if(current > 1){
         prevBtn.onclick = () => fetchTodos(current-1);
         firstBtn.onclick = () => fetchTodos(1);

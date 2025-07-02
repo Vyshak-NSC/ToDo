@@ -1,59 +1,82 @@
 ::-webkit-scrollbar{
-  display: none;
+    display: none;
 }
 
+/* nav{
+    top: 0;
+    left: 10px;
+    right: 10px;
+    z-index: 10;
+    width: auto;
+    height: 35px;
+    display: flex;
+    position: fixed;
+    padding: 10px 20px;
+    border-radius: 4px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, rgba(190,220,255,1) 0%, rgba(60,90,150,0.95) 100%);
+} */
+
 nav{
-  top: 0;
-  left: 10px;
-  right: 10px;
-  z-index: 10;
-  width: auto;
-  height: 35px;
   display: flex;
   position: fixed;
-  padding: 10px 20px;
-  border-radius: 4px;
-  flex-direction: row;
-  align-items: center;
+  width: auto;
+  top: 0;
+  left: 0;
+  right: 0;
   justify-content: space-between;
+  z-index: 10;
+  padding: 5px 10px;
+  /* border-radius: 8px; */
+  height: 40px;
+  align-items: center;
   background: linear-gradient(135deg, rgba(190,220,255,1) 0%, rgba(60,90,150,0.95) 100%);
 }
 
 #add-todo{
-  border: none;
-  height: 2rem;
-  outline: none;
-  color: #fff;
-  padding: 0 1rem;
-  cursor: pointer;
-  font-weight: 600;
-  border-radius: 4px;
-  background-color: #5252e4;
-  transition: background 0.2s box-shadow 0.2s;
-  box-shadow: 0 2px 8px rgba(80, 120, 200, 0.2);
-  background: linear-gradient(135deg, #5b92f8 0%, #38a9ff 100%);
+    border: none;
+    height: 2rem;
+    outline: none;
+    color: #fff;
+    padding: 0 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 4px;
+    background-color: #5252e4;
+    transition: background 0.2s box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(80, 120, 200, 0.2);
+    background: linear-gradient(135deg, #5b92f8 0%, #38a9ff 100%);
 }
 
 #add-todo:hover, #add-todo:focus {
-  background: linear-gradient(135deg, #357ae8 0%, #30bced 100%);
-  box-shadow: 0 4px 16px rgba(80, 120, 200, 0.18);
+    background: linear-gradient(135deg, #357ae8 0%, #30bced 100%);
+    box-shadow: 0 4px 16px rgba(80, 120, 200, 0.18);
 }
 
 #todo-list{
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
-  display: grid;
-  margin: 80px 10px 10px 10px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  margin: 80px 10px;
+  align-items: flex-start;
 }
 
 .todo-item{
-  padding: 1rem;
-  display: flex;
-  height: 120px;
   position: relative;
+  display: flex;
+  flex: 0 0 310px;
+  flex-direction: column;
+  width: 310px;
+  height: 130px;
+  margin-left: 0;
+  margin-right: auto;
+  padding: 10px;
+  gap: 5px;
   border-radius: 12px;
-  backdrop-filter: blur(2px);
   justify-content: space-between;
+  backdrop-filter: blur(2px);
   border: 2px solid rgba(120, 120, 200, 0.15);
   box-shadow: 0 4px 16px rgba(80, 120, 200, 0.10), 
               0 1.5px 4px rgba(100, 100, 100, .10),
@@ -61,117 +84,137 @@ nav{
   background: linear-gradient(135deg, rgba(230,230,230,0.7) 0%, rgba(200,220,255,0.6) 100%);
 }
 
-.todo-content {
-  flex: 4 4 0;
-  min-width: 0;
-  max-height: 80px;
-  text-align: justify;
+@media (max-width: 480px) {
+  .todo-item{
+    width: 90dvw;
+    max-width: 90%;
+    margin: 0 auto;
+  }  
 }
 
 .todo-header{
-  right: 0.7rem;
-  top: 10px;
   display: flex;
   flex-direction: row;
-  position: absolute;
-}
-
-.todo-footer{
-  position: absolute;
-  bottom: 0;
-  right: 10px;
+  width: 100%;
+  height: 1em;
+  position: relative;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .delete-btn{
+  aspect-ratio: 1;
   background: transparent;
   border: none;
-  font-size: 1.2rem;
-  height: 2.2rem;
-  cursor: pointer;
-  margin-left: 10px;
-  margin-top: 0px;
-  opacity: 0.8;
 }
 
-.delete-btn:active{
-  opacity: 1;
+.todo-timestmp{
+  opacity: 0.8;
+  font-size: small;
+}
+
+.todo-item hr{
+  width: 100%;
+  margin: 0 0;
+}
+
+.todo-content{
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  height: 70%;
+}
+
+.text-body{
+  width: 80%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-title,
+.todo-text{
+  display: inline;
+  margin: 0 0;
+  text-align: justify;
+  max-height: 90%;
+  text-transform: lowercase;
+  line-height: 1rem;
+  font-size: 1rem;
+}
+
+.todo-title::first-letter,
+.todo-text::first-letter{
+  text-transform: uppercase;
 }
 
 .todo-title{
+  line-height: 2rem;
   font-weight: bold;
-  text-transform: capitalize;
-  max-width: 80%;
-  margin-bottom: 0.5rem;
-  position: relative;
-  }
-
-.todo-text{
-  max-height: 90%;
-  overflow-y: auto;
-  line-height: 1.1rem;
-  padding-right: 1rem;
-  
+  font-size: 1.2rem;
 }
 
-.todo-text::-webkit-scrollbar{
-    display: none !important;
+.todo-text{
+  overflow-y: auto;
 }
 
 .todo-status{
-  flex: 1 1 0;
-  margin-left: 1rem;
-  align-self: center;
+  justify-items: center;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .circle-checkbox{
-  display: inline-block;
+    display: inline-block;
 }
 
 .circle-checkbox input[type="checkbox"]{
-  appearance: none;
+    appearance: none;
 }
 
 .circle-checkbox span{
-  display: inline-block;
-  width: 2.5rem;
-  height: 2.5rem;
-  position: relative;
-  border-radius: 50%;
-  border: 2px solid #ccc;
-  background-color: white;
+    display: inline-block;
+    width: 2.5rem;
+    height: 2.5rem;
+    position: relative;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    background-color: white;
 }
 
 .circle-checkbox input[type="checkbox"]:checked + span::after{
-  content:"✓";
-  display: flex;
-  width: 2.5rem;
-  height: 2.5rem;
-  color: white;
-  border-radius: 50%;
-  position: absolute;
-  align-items: center;
-  justify-content: center;
-  background-color: #4caf50;
+    content:"✓";
+    display: flex;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: white;
+    border-radius: 50%;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    background-color: #4caf50;
 }
 
 .success-toggle{
-  animation: success-blink 0.7s infinite ease-in-out;
-  transition-delay: 0.3s;
+    animation: success-blink 0.7s infinite ease-in-out;
+    transition-delay: 0.3s;
 }
 
 @keyframes success-blink {
-  from {border: 2px solid #4caf50}
-  to   {border: 2px solid rgba(120, 120, 200, 0.15);}
+    from {border: 2px solid #4caf50}
+    to   {border: 2px solid rgba(120, 120, 200, 0.15);}
 }
 
 .error-toggle{
-  animation: error-blink 0.7s infinite ease-in-out;
-  transition-delay: 0.3s;
+    animation: error-blink 0.7s infinite ease-in-out;
+    transition-delay: 0.3s;
 }
 
 @keyframes error-blink {
-  from {border: 2px solid red}
-  to   {border: 2px solid rgba(120, 120, 200, 0.15);}
+    from {border: 2px solid red}
+    to   {border: 2px solid rgba(120, 120, 200, 0.15);}
 }
 
 
@@ -280,12 +323,9 @@ nav{
   z-index: 20;
 }
 
-.pagination p{
-  color: #555;
-}
 
 .pagination button {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.5rem;
   border-radius: 6px;
   border: none;
   cursor: pointer;
@@ -311,6 +351,7 @@ button:disabled{
     display: flex;
     background: linear-gradient(135deg, #2c3e50, #34495e);
     bottom: 0;
+    padding: 0;
     flex-direction: row;
     justify-content: center;
     align-items: center;
@@ -318,10 +359,6 @@ button:disabled{
 
   .pagination button {
     width: 15%;
-  }
-
-  .pagination p{
-    color: #ccc;
   }
 
   #todo-list {

@@ -10,8 +10,6 @@ export const createTodoItem = (todo) => {
     // Todo header
     const header = document.createElement('div');
     header.className = 'todo-header';
-    const footer = document.createElement('div');
-    footer.className = 'todo-footer';
 
     const timestmp = document.createElement('p');
     timestmp.className = 'todo-timestmp';
@@ -29,17 +27,17 @@ export const createTodoItem = (todo) => {
         }
     }
     
-    footer.appendChild(timestmp);
+    header.appendChild(timestmp);
     header.appendChild(deleteBtn);
-
+    
     // Todo title & content
+    const content = document.createElement('div');
+    content.className = 'todo-content';
+    
     const title = document.createElement('p');
     title.className = 'todo-title';
     title.textContent = `${todo.title}`;
 
-    const content = document.createElement('div');
-    content.className = 'todo-content';
-    
     const text = document.createElement('p');
     text.className = 'todo-text';
     text.textContent = `${todo.content}`
@@ -53,13 +51,28 @@ export const createTodoItem = (todo) => {
         <span></span>
         </label>
     `
-    content.appendChild(header);
-    content.appendChild(title);
-    content.appendChild(text);
-    content.appendChild(footer);
+
+    const line = document.createElement('hr')
+    const textBody = document.createElement('div');
+    textBody.className = 'text-body';
+
+    item.appendChild(header);
+    item.appendChild(line)
     
+    textBody.appendChild(title);
+    textBody.appendChild(text);
+    
+    content.appendChild(textBody);
+    content.appendChild(status);
+
     item.appendChild(content);
-    item.appendChild(status);
+    // item
+    //    header
+    //    line
+    //    content
+    //        |text body   |
+    //        |   title    |      status
+    //        |   text     |
 
     return item;
 }
