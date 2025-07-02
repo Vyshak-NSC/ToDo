@@ -2,15 +2,15 @@ from flask import Flask, jsonify
 from dotenv import load_dotenv
 from app.extensions import db, migrate, ma, socketio
 from flask_cors import CORS
-from . import config
 import os
 
 load_dotenv()
 from app.models import *
 
 def create_app():
+    from config import Config  # Ensure config.py is in your project root or PYTHONPATH
     app = Flask(__name__)
-    app.config.from_object('config.Config')
+    app.config.from_object(Config)
     
     db.init_app(app)
     ma.init_app(app)
