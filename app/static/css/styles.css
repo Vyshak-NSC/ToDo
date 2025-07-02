@@ -139,7 +139,6 @@ nav{
   text-align: justify;
   max-height: 90%;
   text-transform: lowercase;
-  line-height: 1rem;
   font-size: 1rem;
 }
 
@@ -149,7 +148,6 @@ nav{
 }
 
 .todo-title{
-  line-height: 2rem;
   font-weight: bold;
   font-size: 1.2rem;
 }
