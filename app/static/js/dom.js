@@ -7,9 +7,11 @@ export const createTodoItem = (todo) => {
     item.className = 'todo-item';
     item.id = todo.uid;
     
-    // TOdo header
+    // Todo header
     const header = document.createElement('div');
     header.className = 'todo-header';
+    const footer = document.createElement('div');
+    footer.className = 'todo-footer';
 
     const timestmp = document.createElement('p');
     timestmp.className = 'todo-timestmp';
@@ -27,7 +29,7 @@ export const createTodoItem = (todo) => {
         }
     }
     
-    header.appendChild(timestmp);
+    footer.appendChild(timestmp);
     header.appendChild(deleteBtn);
 
     // Todo title & content
@@ -54,6 +56,7 @@ export const createTodoItem = (todo) => {
     content.appendChild(header);
     content.appendChild(title);
     content.appendChild(text);
+    content.appendChild(footer);
     
     item.appendChild(content);
     item.appendChild(status);
