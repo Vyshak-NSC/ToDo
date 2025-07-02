@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from dotenv import load_dotenv
 from app.extensions import db, migrate, ma, socketio
 from flask_cors import CORS
-from config import Config
+from . import config
 import os
 
 load_dotenv()
