@@ -1,4 +1,4 @@
-import { createTodoAPI } from "./api.js";
+import { createTodoAPI, editTodoAPI } from "./api.js";
 
 export function showErrorToast(message) {
     const toast = document.getElementById('error-toast');
@@ -44,14 +44,30 @@ export const createTodo = async ({onSuccess, onError}) => {
     const title = document.getElementById('title-input').value.trim();
     const content = document.getElementById('content-input').value.trim();
 
-    if(!title || !content){
-        onError?.('Both Title and Content required');
+    if(!title){
+        onError?.('Title required');
         return;
     } 
     try{
-        const res = await createTodoAPI(title,content)
+        await createTodoAPI(title,content)
         onSuccess?.();
     }catch{
         onError?.("An error occured.")
+    }
+}
+
+export const editTodo = async ({uid, onSuccess, onError}) => {
+    const title = document.getElementById('title-input').value.trim();
+    const content = document.getElementById('content-input').value.trim();
+
+    if(!title){
+        onError?.("Title required");
+        return;
+    }
+    try{
+        await editTodoAPI(uid, title,content);
+        onSuccess?.();
+    }catch{
+        onError?.('An error occured')
     }
 }

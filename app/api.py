@@ -33,8 +33,8 @@ def ping():
     return jsonify({"message":"API running"}), 200
 
 
+# @limiter.limit('1000 per day')
 @api_bp.route('/todos', methods=['GET'])
-@limiter.limit('1000 per day')
 def get_all_todos():
     page = request.args.get('page', default=1, type=int)
     per_page = request.args.get('per_page', default=10, type=int)

@@ -1,6 +1,6 @@
 import { loadTodos } from "./scripts.js";
-import { createTodo, showErrorToast } from "./utils.js";
-import { deleteTodoAPI } from "./api.js";
+import { createTodo, editTodo, showErrorToast } from "./utils.js";
+import { deleteTodoAPI, getTodoAPI } from "./api.js";
 
 export const createTodoItem = (todo) => {
     const item = document.createElement('div');
@@ -15,22 +15,50 @@ export const createTodoItem = (todo) => {
     timestmp.className = 'todo-timestmp';
     timestmp.textContent = `${todo.date}`;
 
-    const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'delete-btn';
-    deleteBtn.textContent = '\u274C';
-    deleteBtn.onclick = async () => {
+    // menu
+    const menuContainer = document.createElement('div')
+    menuContainer.className = 'menu-container'
+    menuContainer.innerHTML = `
+        <button class="menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="menu-options hidden">
+            <button class="edit-btn"> Edit </button>
+            <hr>
+            <button class="delete-btn"> Delete </button>
+        </div>
+    `
+    header.appendChild(timestmp);
+    header.appendChild(menuContainer);
+
+    const menuOptions = menuContainer.querySelector('.menu-options');
+    const menuBtn = menuContainer.querySelector('.menu')
+    menuContainer.addEventListener('click', (e) => {
+        if(e.target.closest('.menu-container')){
+            menuOptions.classList.toggle('hidden')
+        }
+    })
+
+    menuContainer.querySelector('.delete-btn').addEventListener('click', async()=> {
         try{
             await deleteTodoAPI(todo.uid);
             loadTodos();
         }catch(error){
             showErrorToast(error.message||"Failed to delete todo")
         }
-    }
+    })
+
+    menuContainer.querySelector('.edit-btn').addEventListener('click', async()=> {
+        try{
+            editTodoPopup(todo);
+        }catch(error){
+            showErrorToast(error.message||"Failed to edit todo")
+        }
+    })
     
-    header.appendChild(timestmp);
-    header.appendChild(deleteBtn);
-    
-    // Todo title & text
+    // Todo title & content
     const todoBody = document.createElement('div');
     todoBody.className = 'todo-body';
     
@@ -79,15 +107,11 @@ export const createTodoItem = (todo) => {
     // |     |   content  |         |
     
     item.addEventListener('click', (e) =>{
-        if (
-            e.target.classList.contains('delete-btn') ||
-            e.target.closest('.circle-checkbox')
-        ) return;
+        if (e.target.closest('.menu-container')) return;
         
         // Expand only if text overflows its container
         if (content.scrollHeight > textBody.clientHeight || title.scrollWidth > title.clientWidth) {
             item.classList.toggle('expanded-todo');
-            console.log('expanded');
         }else{
             item.classList.remove('expanded-todo')
         }
@@ -95,7 +119,42 @@ export const createTodoItem = (todo) => {
     return item;
 }
 
-export const openPopup = () => {
+export const addTodoPopup = () => {
+    openPopup({
+        onSubmit: async () => {
+            // call createTodo which has createTodoAPI
+            // on success call fetchTodo to refresh and close popup
+            // on error show error toast
+            await createTodo({
+                onSuccess: () => {
+                    loadTodos();
+                    closePopup();
+                },
+                onError: showErrorToast
+            })
+        }
+    });
+}
+
+export const editTodoPopup = async (todoItem) => {
+    if(todoItem){
+        openPopup({
+            data:todoItem,
+            onSubmit: async () => {
+                await editTodo({
+                    uid:todoItem.uid,
+                    onSuccess : () => {
+                        loadTodos();
+                        closePopup();
+                    },
+                    onError: showErrorToast
+                })
+            }
+        })
+    }
+}
+
+export const openPopup = ({onSubmit,data = null }) => {
     const popup = document.createElement('div');
     const popupOverlay = document.createElement('div');
     const titleBox = document.createElement('div')
@@ -129,6 +188,10 @@ export const openPopup = () => {
     const contentInput = contentBox.querySelector('#content-input');
     const contentCount = contentBox.querySelector('#content-word-count');
 
+    if(data){
+        titleInput.value = data.title;
+        contentInput.value = data.content;
+    }
     titleInput.addEventListener('input', () => {
         titleCount.textContent = `${titleInput.value.length}/50`
     })
@@ -137,25 +200,9 @@ export const openPopup = () => {
         contentCount.textContent = `${contentInput.value.length}/200`
     })
     
-    
-
     submit.textContent = 'Submit';
     cancel.textContent = 'Cancel';
 
-    submit.onclick = async () => {
-        // call createTodo which has createTodoAPI
-        // on success call fetchTodo to refresh and close popup
-        // on error show error toast
-        await createTodo({
-            onSuccess: () => {
-                loadTodos();
-                closePopup();
-            },
-            onError: showErrorToast
-        })
-    }
-
-    
     cancel.onclick = () => closePopup();
     
     buttonBox.appendChild(cancel);
@@ -174,6 +221,10 @@ export const openPopup = () => {
             closePopup();
         }
     })
+    
+    submit.onclick = () => {
+        onSubmit()
+    }
 }
 
 function closePopup(){

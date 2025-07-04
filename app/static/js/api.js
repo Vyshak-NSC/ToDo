@@ -16,6 +16,17 @@ export const createTodoAPI = async (title,content) => {
     return handleAPIResponse(response)
 }
 
+export const editTodoAPI = async (uid,title,content) => {
+    const response = await fetch(`api/todos/${uid}`, {
+        method:'PATCH',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({title , content})
+    });
+    return handleAPIResponse(response)
+}
+
 export const toggleTodoAPI = async (uid) => {
     const response = await fetch(`/api/todos/${uid}/toggle`, {
         method: 'PATCH'
@@ -30,7 +41,7 @@ export async function deleteTodoAPI(uid){
     return handleAPIResponse(response)
 }
 
-export async function getTodo(uid){
+export async function getTodoAPI(uid){
     const response = await fetch(`api/todos/${uid}`)
     return handleAPIResponse(response)
 }

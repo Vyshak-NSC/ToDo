@@ -1,6 +1,6 @@
 import { showErrorToast, socketSetup } from './utils.js'
 import { fetchTodosAPI, toggleTodoAPI } from './api.js';
-import { createTodoItem, openPopup } from './dom.js';
+import { addTodoPopup, createTodoItem, openPopup } from './dom.js';
 
 // Manage live updates
 const socket = io({ transports:['websocket'] });
@@ -22,6 +22,8 @@ export async function loadTodos(page=1){
             container.innerHTML = `<p>No todos found!</p>`
             return;
         }
+
+        // modify when adding filter/sort. else: pagination element is deleted
         container.innerHTML = ''
 
         todos.forEach(todo => {
@@ -90,7 +92,7 @@ function displayPaginated(current, totalPages){
 
 document.addEventListener("DOMContentLoaded", () => {
     loadTodos();
-    document.getElementById('add-todo').addEventListener('click',openPopup);
+    document.getElementById('add-todo').addEventListener('click',addTodoPopup);
 
     document.getElementById('todo-list').addEventListener('change', async function(e){
         if(e.target.type === 'checkbox'){
