@@ -118,7 +118,7 @@ nav{
   margin: 0 0;
 }
 
-.todo-content{
+.todo-body{
   display: flex;
   justify-content: space-between;
   position: relative;
@@ -142,7 +142,6 @@ nav{
   font-size: 1rem;
   overflow: hidden;
   max-width: 100%;
-  text-overflow: ellipsis;
 }
 
 .todo-title::first-letter,
@@ -151,12 +150,28 @@ nav{
 }
 
 .todo-title{
+  text-overflow: ellipsis;
   font-weight: bold;
   font-size: 1.2rem;
+  margin-bottom: 5px;
+  min-height: 1.2rem;
+}
+
+.expanded-todo{
+  min-height: 120px;
+  height: auto !important;
+  transition: height 0.3s;
+}
+.expanded-todo .todo-title {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-break: break-word;
 }
 
 .todo-text{
   overflow-y: auto;
+  word-break: break-all;
 }
 
 .todo-status{

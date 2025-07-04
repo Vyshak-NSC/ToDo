@@ -30,9 +30,9 @@ export const createTodoItem = (todo) => {
     header.appendChild(timestmp);
     header.appendChild(deleteBtn);
     
-    // Todo title & content
-    const content = document.createElement('div');
-    content.className = 'todo-content';
+    // Todo title & text
+    const todoBody = document.createElement('div');
+    todoBody.className = 'todo-body';
     
     const title = document.createElement('p');
     title.className = 'todo-title';
@@ -62,18 +62,35 @@ export const createTodoItem = (todo) => {
     textBody.appendChild(title);
     textBody.appendChild(text);
     
-    content.appendChild(textBody);
-    content.appendChild(status);
+    todoBody.appendChild(textBody);
+    todoBody.appendChild(status);
 
-    item.appendChild(content);
+    item.appendChild(todoBody);
+    
+    // ====layout====
     // item
     //    header
     //    line
-    //    content
+    //    todo body
     //        |text body   |
     //        |   title    |      status
     //        |   text     |
+    
 
+    item.addEventListener('click', function(e) {
+        if (
+            e.target.classList.contains('delete-btn') ||
+            e.target.closest('.circle-checkbox')
+        ) return;
+        
+        // Expand only if text overflows its container
+        if (text.scrollHeight > textBody.clientHeight || title.scrollWidth > title.clientWidth) {
+            item.classList.toggle('expanded-todo');
+            console.log('expanded');
+        }else{
+            item.classList.remove('expanded-todo')
+        }
+    });
     return item;
 }
 
@@ -97,12 +114,29 @@ export const openPopup = () => {
 
     titleBox.innerHTML = `
         <label for="title-input" name="title">Title</label>
-        <input type="text" name ="title" id="title-input">
-    `
+        <input type="text" name="title" id="title-input" maxlength="50">
+        <span id="title-word-count">0/50</span>
+    `;
     contentBox.innerHTML = `
         <label for="content-input" name="content">Content</label>
-        <input type="text" name ="content" id="content-input">
-    `
+        <input type="text" name="content" id="content-input" maxlength="200">
+        <span id="content-word-count">0/200</span>
+    `;
+
+    const titleInput = titleBox.querySelector('#title-input');
+    const titleCount = titleBox.querySelector('#title-word-count');
+    const contentInput = contentBox.querySelector('#content-input');
+    const contentCount = contentBox.querySelector('#content-word-count');
+
+    titleInput.addEventListener('input', () => {
+        titleCount.textContent = `${titleInput.value.length}/50`
+    })
+
+    contentInput.addEventListener('input', () => {
+        contentCount.textContent = `${contentInput.value.length}/200`
+    })
+    
+    
 
     submit.textContent = 'Submit';
     cancel.textContent = 'Cancel';
