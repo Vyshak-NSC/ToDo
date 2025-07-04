@@ -55,12 +55,12 @@ nav{
     box-shadow: 0 4px 16px rgba(80, 120, 200, 0.18);
 }
 
-#todo-list{
+#todo-list {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
   gap: 1rem;
-  margin: 80px 10px;
-  align-items: flex-start;
-   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  margin-top: 80px;
+  padding: 0 1rem;
 }
 
 .todo-item{
@@ -75,7 +75,6 @@ nav{
   padding: 10px;
   gap: 5px;
   border-radius: 12px;
-  justify-content: space-between;
   backdrop-filter: blur(2px);
   border: 2px solid rgba(120, 120, 200, 0.15);
   box-shadow: 0 4px 16px rgba(80, 120, 200, 0.10), 
@@ -134,7 +133,7 @@ nav{
 }
 
 .todo-title,
-.todo-text{
+.todo-content{
   margin: 0 0;
   text-align: justify;
   max-height: 90%;
@@ -142,10 +141,11 @@ nav{
   font-size: 1rem;
   overflow: hidden;
   max-width: 100%;
+  cursor: pointer;
 }
 
 .todo-title::first-letter,
-.todo-text::first-letter{
+.todo-content::first-letter{
   text-transform: uppercase;
 }
 
@@ -169,7 +169,7 @@ nav{
   word-break: break-word;
 }
 
-.todo-text{
+.todo-content{
   overflow-y: auto;
   word-break: break-all;
 }

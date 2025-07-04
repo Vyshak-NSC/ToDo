@@ -38,9 +38,9 @@ export const createTodoItem = (todo) => {
     title.className = 'todo-title';
     title.textContent = `${todo.title}`;
 
-    const text = document.createElement('p');
-    text.className = 'todo-text';
-    text.textContent = `${todo.content}`
+    const content = document.createElement('p');
+    content.className = 'todo-content';
+    content.textContent = `${todo.content}`
 
     // todo status
     const status = document.createElement('div');
@@ -60,7 +60,7 @@ export const createTodoItem = (todo) => {
     item.appendChild(line)
     
     textBody.appendChild(title);
-    textBody.appendChild(text);
+    textBody.appendChild(content);
     
     todoBody.appendChild(textBody);
     todoBody.appendChild(status);
@@ -69,12 +69,14 @@ export const createTodoItem = (todo) => {
     
     // ====layout====
     // item
-    //    header
-    //    line
-    //    todo body
-    //        |text body   |
-    //        |   title    |      status
-    //        |   text     |
+    // | header                     |
+    // |   |-timestmp               |
+    // |   |-delete-btn             |
+    // | line-----------------------|
+    // | todo body                  |
+    // |     |text body   |         |
+    // |     |   title    | status  |
+    // |     |   content  |         |
     
 
     item.addEventListener('click', function(e) {
@@ -84,7 +86,7 @@ export const createTodoItem = (todo) => {
         ) return;
         
         // Expand only if text overflows its container
-        if (text.scrollHeight > textBody.clientHeight || title.scrollWidth > title.clientWidth) {
+        if (content.scrollHeight > textBody.clientHeight || title.scrollWidth > title.clientWidth) {
             item.classList.toggle('expanded-todo');
             console.log('expanded');
         }else{
