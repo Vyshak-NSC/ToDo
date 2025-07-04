@@ -1,8 +1,8 @@
 from flask import Flask, jsonify
 from dotenv import load_dotenv
-from app.extensions import db, migrate, ma, socketio
+from flask_limiter import RateLimitExceeded
+from app.extensions import db, migrate, ma, socketio, limiter
 from flask_cors import CORS
-import os
 
 load_dotenv()
 from app.models import *
@@ -16,10 +16,15 @@ def create_app():
     ma.init_app(app)
     socketio.init_app(app, async_mode='threading')
     migrate.init_app(app, db)
+    limiter.init_app(app)
     CORS(app)
     
-    with app.app_context():
-        db.create_all()
+    @app.errorhandler(RateLimitExceeded)
+    def ratelimit_handler(e):
+        return jsonify({
+            "error": "Rate limit exceeded. Please wait and try again."
+        }), 429
+    
         
     @app.errorhandler(404)
     def not_found(e):

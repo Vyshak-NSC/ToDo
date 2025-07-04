@@ -10,6 +10,27 @@ export function showErrorToast(message) {
     }, 3000);
 }
 
+export async function handleAPIResponse(response){
+    let data;
+    try {
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+            data = await response.json();
+        } else {
+            const text = await response.text();
+            data = { error: text || 'Unknown error' };
+        }
+    } catch (err) {
+        throw new Error('Invalid response from server');
+    }
+
+    if (!response.ok) {
+        console.error('Server error:', data);
+        throw new Error(data.error || 'An error occurred');
+    }
+    return data;
+}
+
 export const socketSetup = (socket, refresh) => {
     socket.on('todo_event', (data) => {
         const {action} = data;
@@ -25,14 +46,10 @@ export const createTodo = async ({onSuccess, onError}) => {
 
     if(!title || !content){
         onError?.('Both Title and Content required');
-    }
+        return;
+    } 
     try{
         const res = await createTodoAPI(title,content)
-        if(!res.ok){
-            const e = await res.json();
-            onError?.(e.error || 'An error occured.')
-            return;
-        }
         onSuccess?.();
     }catch{
         onError?.("An error occured.")

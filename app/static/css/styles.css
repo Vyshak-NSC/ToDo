@@ -2,23 +2,6 @@
     display: none;
 }
 
-/* nav{
-    top: 0;
-    left: 10px;
-    right: 10px;
-    z-index: 10;
-    width: auto;
-    height: 35px;
-    display: flex;
-    position: fixed;
-    padding: 10px 20px;
-    border-radius: 4px;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(135deg, rgba(190,220,255,1) 0%, rgba(60,90,150,0.95) 100%);
-} */
-
 nav{
   display: flex;
   position: fixed;
@@ -213,7 +196,7 @@ nav{
     background-color: #4caf50;
 }
 
-.success-toggle{
+.toggle-success{
     animation: success-blink 0.7s infinite ease-in-out;
     transition-delay: 0.3s;
 }
@@ -223,7 +206,7 @@ nav{
     to   {border: 2px solid rgba(120, 120, 200, 0.15);}
 }
 
-.error-toggle{
+.toggle-error{
     animation: error-blink 0.7s infinite ease-in-out;
     transition-delay: 0.3s;
 }

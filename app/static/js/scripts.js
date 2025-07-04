@@ -4,13 +4,13 @@ import { createTodoItem, openPopup } from './dom.js';
 
 // Manage live updates
 const socket = io({ transports:['websocket'] });
-socketSetup(socket, fetchTodos);
+socketSetup(socket, loadTodos);
 
 
 let currentPage = 1;
 const perPage = 15;
 
-export async function fetchTodos(page=1){
+export async function loadTodos(page=1){
     const container = document.getElementById('todo-list')
     try{
         const result = await fetchTodosAPI(page,perPage);
@@ -72,15 +72,15 @@ function displayPaginated(current, totalPages){
         pagination.style.display = ''
     }
     if(current > 1){
-        prevBtn.onclick = () => fetchTodos(current-1);
-        firstBtn.onclick = () => fetchTodos(1);
+        prevBtn.onclick = () => loadTodos(current-1);
+        firstBtn.onclick = () => loadTodos(1);
     }else{
         prevBtn.disabled = true;
     }
 
     if(current < totalPages){
-        nextBtn.onclick = () => fetchTodos(current+1)
-        lastBtn.onclick = () => fetchTodos(totalPages)
+        nextBtn.onclick = () => loadTodos(current+1)
+        lastBtn.onclick = () => loadTodos(totalPages)
     }else{
         nextBtn.disabled = true;
     }
@@ -89,7 +89,7 @@ function displayPaginated(current, totalPages){
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    fetchTodos();
+    loadTodos();
     document.getElementById('add-todo').addEventListener('click',openPopup);
 
     document.getElementById('todo-list').addEventListener('change', async function(e){
@@ -100,31 +100,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try{
                 const response = await toggleTodoAPI(todoId);
-                if(!response.ok){
-                    let errorMsg = 'Failed to toggle item.';
-                    try {
-                        const errJson = await response.json();
-                        errorMsg = errJson.error || JSON.stringify(errJson);
-                    } catch {
-                        const fallback = await response.text();
-                        errorMsg = fallback;
-                    }
-                    showErrorToast(errorMsg);
-                }else{
-                    const data = await response.json();
-                    todoCheckbox.checked = data.status;
-                    
-                    todoItem.classList.add('success-toggle');
-                    setTimeout(() => {
-                        todoItem.classList.remove('success-toggle')
-                    },1400)
-                }
+                todoCheckbox.checked = response.status;
+
+                todoItem.classList.add('toggle-success')
+                setTimeout(() => {
+                    todoItem.classList.remove('toggle-success')
+                }, 1400);
                 
             }catch(error){
-                todoItem.classList.add('error-toggle')
+                todoItem.classList.add('toggle-error')
                 todoCheckbox.checked = !todoCheckbox.checked;
                 setTimeout(() => {
-                    todoItem.classList.remove('error-toggle')
+                    todoItem.classList.remove('toggle-error')
                 },1400)
             }
         }

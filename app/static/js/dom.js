@@ -1,4 +1,4 @@
-import { fetchTodos } from "./scripts.js";
+import { loadTodos } from "./scripts.js";
 import { createTodo, showErrorToast } from "./utils.js";
 import { deleteTodoAPI } from "./api.js";
 
@@ -21,9 +21,9 @@ export const createTodoItem = (todo) => {
     deleteBtn.onclick = async () => {
         try{
             await deleteTodoAPI(todo.uid);
-            fetchTodos();
-        }catch{
-            showErrorToast("Failed to delete todo")
+            loadTodos();
+        }catch(error){
+            showErrorToast(error.message||"Failed to delete todo")
         }
     }
     
@@ -78,8 +78,7 @@ export const createTodoItem = (todo) => {
     // |     |   title    | status  |
     // |     |   content  |         |
     
-
-    item.addEventListener('click', function(e) {
+    item.addEventListener('click', (e) =>{
         if (
             e.target.classList.contains('delete-btn') ||
             e.target.closest('.circle-checkbox')
@@ -149,31 +148,32 @@ export const openPopup = () => {
         // on error show error toast
         await createTodo({
             onSuccess: () => {
-                fetchTodos();
+                loadTodos();
                 closePopup();
             },
             onError: showErrorToast
         })
     }
 
-    popupOverlay.addEventListener('click', (e) => {
-        if(e.target === popupOverlay){
-            closePopup();
-        }
-    })
-
+    
     cancel.onclick = () => closePopup();
-
+    
     buttonBox.appendChild(cancel);
     buttonBox.appendChild(submit);
     
     popup.appendChild(titleBox);
     popup.appendChild(contentBox);
     popup.appendChild(buttonBox);
-
+    
     popupOverlay.appendChild(popup)
     document.body.appendChild(popupOverlay);
     document.body.style.overflow = 'hidden';
+    
+    popupOverlay.addEventListener('click', (e) => {
+        if(e.target === popupOverlay){
+            closePopup();
+        }
+    })
 }
 
 function closePopup(){

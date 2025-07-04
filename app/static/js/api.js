@@ -1,6 +1,8 @@
+import { handleAPIResponse } from "./utils.js";
+
 export const fetchTodosAPI = async (page=1,perPage=12) => {
     const response = await fetch(`/api/todos?page=${page}&per_page=${perPage}`)
-    return response.json();
+    return handleAPIResponse(response)
 }
 
 export const createTodoAPI = async (title,content) => {
@@ -11,22 +13,24 @@ export const createTodoAPI = async (title,content) => {
         },
         body:JSON.stringify({ title, content })
     });
-    return response;
+    return handleAPIResponse(response)
 }
 
 export const toggleTodoAPI = async (uid) => {
     const response = await fetch(`/api/todos/${uid}/toggle`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    return response;
+        method: 'PATCH'
+    });
+    return handleAPIResponse(response)
 }
 
 export async function deleteTodoAPI(uid){
     const response = await fetch(`api/todos/${uid}`,{
         method:'DELETE'
     })
-    .then(res => res.json())
+    return handleAPIResponse(response)
+}
+
+export async function getTodo(uid){
+    const response = await fetch(`api/todos/${uid}`)
+    return handleAPIResponse(response)
 }

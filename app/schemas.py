@@ -1,6 +1,6 @@
 from app.models import Todo
 from app.extensions import ma
-from marshmallow_sqlalchemy import auto_field, SQLAlchemyAutoSchema
+from marshmallow_sqlalchemy import auto_field
 from marshmallow import fields
 
 class TodoSchema(ma.SQLAlchemyAutoSchema):
