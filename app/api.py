@@ -28,13 +28,13 @@ def get_todo_or_abort(uid):
 # =============
  
 @api_bp.route('/ping')
-@limiter.limit('20 per minute')
+@limiter.limit('100 per day')
 def ping():
     return jsonify({"message":"API running"}), 200
 
 
 @api_bp.route('/todos', methods=['GET'])
-@limiter.limit('20 per minute')
+@limiter.limit('1000 per day')
 def get_all_todos():
     page = request.args.get('page', default=1, type=int)
     per_page = request.args.get('per_page', default=10, type=int)
@@ -50,14 +50,14 @@ def get_all_todos():
     })
 
 @api_bp.route('/todos/<int:uid>', methods=['GET'])
-@limiter.limit('20 per minute')
+@limiter.limit('1000 per day')
 def get_todo(uid):
     todo = get_todo_or_abort(uid)
     return jsonify(todo_schema.dump(todo))
 
 
 @api_bp.route('/todos', methods=['POST'])
-@limiter.limit('5 per minute')
+@limiter.limit('100 per day')
 def create_todo():
     if not request.is_json:
         return jsonify({"error": "Request content-type must be application/json"}), 400
@@ -84,7 +84,7 @@ def create_todo():
     return jsonify(todo_schema.dump(new_todo)), 201
 
 @api_bp.route('/todos/<int:uid>', methods=['PATCH'])
-@limiter.limit('5 per minute')
+@limiter.limit('200 per day')
 def update_todo(uid):
     todo = get_todo_or_abort(uid)
     
@@ -112,7 +112,7 @@ def update_todo(uid):
 
 # Specialised endpoint for status toggle
 @api_bp.route('/todos/<int:uid>/toggle', methods=['PATCH'])
-@limiter.limit('5 per minute')
+@limiter.limit('500 per day')
 def toggle_status(uid):
     todo = get_todo_or_abort(uid)
     
@@ -126,7 +126,7 @@ def toggle_status(uid):
     return jsonify(todo_schema.dump(todo)), 200
 
 @api_bp.route('/todos/<int:uid>', methods=['DELETE'])
-@limiter.limit('5 per minute')
+@limiter.limit('100 per day')
 def delete_todo(uid):
     todo = get_todo_or_abort(uid)
     

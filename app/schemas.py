@@ -1,7 +1,7 @@
 from app.models import Todo
 from app.extensions import ma
 from marshmallow_sqlalchemy import auto_field
-from marshmallow import fields
+from marshmallow import fields, validate
 
 class TodoSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -9,7 +9,7 @@ class TodoSchema(ma.SQLAlchemyAutoSchema):
         load_instance = True
     
     uid = auto_field()
-    title = auto_field()
-    content = auto_field()
+    title = auto_field(validate=validate.Length(min=1))
+    content = auto_field(validate=validate.Length(min=1))
     status = auto_field()
     date = fields.DateTime(format="%Y-%m-%d %H:%M")
